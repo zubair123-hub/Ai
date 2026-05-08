@@ -354,9 +354,21 @@
             color: #333;
         }
 
+        .thinking-indicator {
+            color: #999;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+
         .chat-input-area {
             padding: 20px;
             border-top: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-controls {
             display: flex;
             gap: 10px;
         }
@@ -388,11 +400,24 @@
             background: #764ba2;
         }
 
-        .model-selector {
+        .model-selector,
+        .thinking-toggle {
             padding: 10px;
             border: 2px solid #ddd;
             border-radius: 5px;
             background: white;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .thinking-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+        }
+
+        .thinking-checkbox input {
             cursor: pointer;
         }
 
@@ -993,37 +1018,39 @@
             <!-- AI Chat Page -->
             <div id="chat" class="page">
                 <h1>💬 AI Chat</h1>
-                <div style="margin: 20px 0; display: flex; gap: 10px;">
+                <div style="margin: 20px 0; display: flex; gap: 10px; flex-wrap: wrap;">
                     <select id="modelSelect" class="model-selector">
                         <option value="gpt">GPT-4</option>
                         <option value="gemini">Gemini</option>
                         <option value="claude">Claude</option>
                         <option value="deepseek">DeepSeek</option>
                     </select>
+                    <label class="thinking-checkbox">
+                        <input type="checkbox" id="thinkingMode" onchange="toggleThinking()">
+                        🧠 Enable Thinking Mode
+                    </label>
                 </div>
                 <div class="chat-container">
-                    <div class="chat-messages" id="chatMessages">
-                        <div class="message bot">
-                            <div class="message-bubble">Hi! I'm your AI assistant. How can I help you today?</div>
-                        </div>
-                    </div>
+                    <div class="chat-messages" id="chatMessages"></div>
                     <div class="chat-input-area">
-                        <input type="text" id="chatInput" class="chat-input" placeholder="Ask anything...">
-                        <button class="chat-send" onclick="sendMessage()">Send</button>
+                        <div class="chat-controls">
+                            <input type="text" class="chat-input" id="chatInput" placeholder="Type your message..." onkeypress="if(event.key==='Enter')sendMessage()">
+                            <button class="chat-send" onclick="sendMessage()">Send</button>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Image Generator Page -->
             <div id="imageGen" class="page">
-                <h1>🎨 AI Image Generator</h1>
+                <h1>🎨 Image Generator</h1>
                 <div class="generator-container">
                     <div class="form-group">
-                        <label for="imagePrompt">Describe your image</label>
-                        <textarea id="imagePrompt" placeholder="e.g., A futuristic city with flying cars..."></textarea>
+                        <label>Image Prompt</label>
+                        <textarea id="imagePrompt" placeholder="Describe the image you want to generate..."></textarea>
                     </div>
-                    <button class="auth-btn" onclick="generateImage()" style="width: 100%; margin-top: 15px;">Generate Image</button>
-                    <div class="generated-image" id="imageResult"></div>
+                    <button class="auth-btn" onclick="generateImage()">Generate Image</button>
+                    <div class="generated-image" id="generatedImageContainer"></div>
                 </div>
             </div>
 
@@ -1032,87 +1059,84 @@
                 <h1>💻 Code Generator</h1>
                 <div class="generator-container">
                     <div class="form-group">
-                        <label for="codePrompt">What code do you need?</label>
-                        <textarea id="codePrompt" placeholder="e.g., Create a Python function to calculate factorial..."></textarea>
+                        <label>Code Requirements</label>
+                        <textarea id="codePrompt" placeholder="Describe the code you need..."></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="codeLanguage">Programming Language</label>
-                        <select id="codeLanguage" style="padding: 10px; border: 2px solid #ddd; border-radius: 5px; width: 100%;">
-                            <option>Python</option>
-                            <option>JavaScript</option>
-                            <option>Java</option>
-                            <option>C++</option>
-                            <option>PHP</option>
-                            <option>Ruby</option>
+                        <label>Language</label>
+                        <select id="codeLanguage" style="width: 100%; padding: 10px;">
+                            <option value="javascript">JavaScript</option>
+                            <option value="python">Python</option>
+                            <option value="java">Java</option>
+                            <option value="cpp">C++</option>
+                            <option value="html">HTML</option>
                         </select>
                     </div>
-                    <button class="auth-btn" onclick="generateCode()" style="width: 100%; margin-top: 15px;">Generate Code</button>
-                    <div id="codeResult"></div>
+                    <button class="auth-btn" onclick="generateCode()">Generate Code</button>
+                    <div class="code-section" id="generatedCodeContainer"></div>
                 </div>
             </div>
 
             <!-- Community Posts Page -->
             <div id="community" class="page">
                 <h1>👥 Community Posts</h1>
-                <div class="posts-container" id="postsContainer">
-                    <!-- Posts will be generated by JavaScript -->
-                </div>
+                <button class="auth-btn" style="margin-bottom: 20px;" onclick="showCreatePostForm()">+ Create Post</button>
+                <div class="posts-container" id="postsContainer"></div>
             </div>
 
             <!-- Lodging Booking Page -->
             <div id="lodging" class="page">
-                <h1>🏨 Book Your Perfect Hotel</h1>
+                <h1>🏨 Lodging Booking</h1>
                 <div class="lodging-container">
                     <div class="search-filters">
                         <div class="filter-group">
                             <label>Location</label>
-                            <input type="text" id="filterLocation" placeholder="City or region">
+                            <input type="text" id="location" placeholder="City name">
                         </div>
                         <div class="filter-group">
                             <label>Check-in</label>
-                            <input type="date" id="filterCheckin">
+                            <input type="date" id="checkIn">
                         </div>
                         <div class="filter-group">
                             <label>Check-out</label>
-                            <input type="date" id="filterCheckout">
+                            <input type="date" id="checkOut">
                         </div>
                         <div class="filter-group">
                             <label>Guests</label>
-                            <input type="number" id="filterGuests" min="1" max="10" value="1">
+                            <select id="guests">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4+</option>
+                            </select>
                         </div>
-                        <div class="filter-group">
-                            <label>Max Price</label>
-                            <input type="number" id="filterPrice" min="0" value="500" placeholder="USD">
-                        </div>
+                        <button class="auth-btn" style="padding: 10px;" onclick="searchHotels()">Search</button>
                     </div>
-
-                    <div class="hotels-grid" id="hotelsGrid">
-                        <!-- Hotels will be generated by JavaScript -->
-                    </div>
+                    <div class="hotels-grid" id="hotelsGrid"></div>
                 </div>
             </div>
 
             <!-- Profile Page -->
             <div id="profile" class="page">
-                <h1>👤 Your Profile</h1>
+                <h1>👤 Profile</h1>
                 <div class="profile-container">
                     <div class="profile-header">
                         <div class="profile-avatar">👤</div>
-                        <div class="profile-name" id="profileName">John Doe</div>
-                        <div class="profile-email" id="profileEmail">john@example.com</div>
+                        <div class="profile-name" id="profileName">User Name</div>
+                        <div class="profile-email" id="profileEmail">user@example.com</div>
                     </div>
                     <div class="profile-stats">
                         <div class="stat">
-                            <div class="stat-number" id="statChats">15</div>
+                            <div class="stat-number" id="chatCount">0</div>
                             <div class="stat-label">AI Chats</div>
                         </div>
                         <div class="stat">
-                            <div class="stat-number" id="statBookings">3</div>
-                            <div class="stat-label">Bookings</div>
+                            <div class="stat-number" id="imageCount">0</div>
+                            <div class="stat-label">Generated Images</div>
                         </div>
                         <div class="stat">
-                            <div class="stat-number" id="statFavorites">8</div>
-                            <div class="stat-label">Favorites</div>
+                            <div class="stat-number" id="bookingCount">0</div>
+                            <div class="stat-label">Bookings</div>
                         </div>
                     </div>
                 </div>
@@ -1123,18 +1147,18 @@
                 <h1>⚙️ Settings</h1>
                 <div class="settings-container">
                     <div class="setting-item">
-                        <span class="setting-label">Dark Mode</span>
+                        <div class="setting-label">Dark Mode</div>
                         <div class="toggle-switch" onclick="toggleSetting(this)"></div>
                     </div>
                     <div class="setting-item">
-                        <span class="setting-label">Notifications</span>
+                        <div class="setting-label">Notifications</div>
                         <div class="toggle-switch active" onclick="toggleSetting(this)"></div>
                     </div>
                     <div class="setting-item">
-                        <span class="setting-label">Email Updates</span>
-                        <div class="toggle-switch" onclick="toggleSetting(this)"></div>
+                        <div class="setting-label">Auto-save</div>
+                        <div class="toggle-switch active" onclick="toggleSetting(this)"></div>
                     </div>
-                    <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
                 </div>
             </div>
         </div>
@@ -1144,12 +1168,12 @@
     <div id="bookingModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 id="bookingHotelName">Hotel Booking</h2>
-                <button class="close-btn" onclick="closeBooking()">✕</button>
+                <h2>Complete Booking</h2>
+                <button class="close-btn" onclick="closeBookingModal()">✕</button>
             </div>
-            <form class="modal-form" onsubmit="submitBooking(event)">
+            <form class="modal-form" onsubmit="completeBooking(event)">
                 <div class="form-group">
-                    <label>Guest Name</label>
+                    <label>Full Name</label>
                     <input type="text" required>
                 </div>
                 <div class="form-group">
@@ -1157,206 +1181,81 @@
                     <input type="email" required>
                 </div>
                 <div class="form-group">
-                    <label>Check-in Date</label>
-                    <input type="date" required>
+                    <label>Phone</label>
+                    <input type="tel" required>
                 </div>
-                <div class="form-group">
-                    <label>Check-out Date</label>
-                    <input type="date" required>
-                </div>
-                <div class="form-group">
-                    <label>Number of Guests</label>
-                    <input type="number" min="1" max="10" required>
-                </div>
-                <div class="form-group">
-                    <label>Special Requests</label>
-                    <textarea placeholder="Any special requirements..."></textarea>
-                </div>
-                <button type="submit" class="auth-btn" style="width: 100%;">Confirm Booking</button>
+                <button type="submit" class="auth-btn">Complete Booking</button>
             </form>
         </div>
     </div>
 
     <script>
-        // Global Variables
+        // Global State
         let currentUser = null;
-        let isLogin = true;
-        let favorites = [];
-        let chatHistory = [];
-        let bookingData = {};
-
-        const hotels = [
-            {
-                id: 1,
-                name: "Luxury Paradise Resort",
-                location: "Bali, Indonesia",
-                price: 250,
-                rating: 4.8,
-                reviews: 342,
-                image: "🏨",
-                amenities: ["Pool", "Spa", "WiFi", "Restaurant"]
-            },
-            {
-                id: 2,
-                name: "Mountain View Hotel",
-                location: "Swiss Alps, Switzerland",
-                price: 180,
-                rating: 4.6,
-                reviews: 215,
-                image: "⛰️",
-                amenities: ["Hiking", "WiFi", "Gym", "Café"]
-            },
-            {
-                id: 3,
-                name: "Urban Boutique Hotel",
-                location: "New York City, USA",
-                price: 200,
-                rating: 4.7,
-                reviews: 521,
-                image: "🏢",
-                amenities: ["WiFi", "Gym", "Bar", "Room Service"]
-            },
-            {
-                id: 4,
-                name: "Beach House Escape",
-                location: "Maldives",
-                price: 320,
-                rating: 4.9,
-                reviews: 289,
-                image: "🏖️",
-                amenities: ["Beach", "Water Sports", "Spa", "Restaurant"]
-            },
-            {
-                id: 5,
-                name: "Garden Villa Retreat",
-                location: "Tuscany, Italy",
-                price: 120,
-                rating: 4.5,
-                reviews: 178,
-                image: "🌳",
-                amenities: ["Gardens", "WiFi", "Vineyard", "Kitchen"]
-            },
-            {
-                id: 6,
-                name: "City Center Apartment",
-                location: "Paris, France",
-                price: 150,
-                rating: 4.6,
-                reviews: 412,
-                image: "🗼",
-                amenities: ["WiFi", "Kitchen", "Balcony", "Concierge"]
-            }
-        ];
-
-        const posts = [
-            {
-                id: 1,
-                author: "Sarah Chen",
-                content: "Just discovered this amazing AI Chat feature! The responses are incredibly accurate.",
-                likes: 124,
-                comments: 23
-            },
-            {
-                id: 2,
-                author: "Mike Johnson",
-                content: "The image generator blew my mind! Generated a perfect book cover design in seconds.",
-                likes: 456,
-                comments: 89
-            },
-            {
-                id: 3,
-                author: "Emma Wilson",
-                content: "Booked the most beautiful hotel in Bali through this platform. Highly recommend!",
-                likes: 203,
-                comments: 45
-            }
-        ];
-
-        // Splash Screen Animation
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.getElementById('splashScreen').style.display = 'none';
-                showAuthScreen();
-            }, 3000);
-        });
+        let isSignUp = false;
+        let thinkingModeEnabled = false;
+        let stats = {
+            chats: 0,
+            images: 0,
+            bookings: 0
+        };
 
         // Auth Functions
-        function showAuthScreen() {
-            document.getElementById('authScreen').style.display = 'flex';
-        }
-
-        function toggleAuth() {
-            isLogin = !isLogin;
-            const title = document.getElementById('authTitle');
-            const submitBtn = document.getElementById('authSubmitBtn');
-            const toggleText = document.getElementById('authToggleText');
-            const nameGroup = document.getElementById('nameGroup');
-
-            if (isLogin) {
-                title.textContent = 'Login';
-                submitBtn.textContent = 'Login';
-                toggleText.textContent = "Don't have an account? ";
-                nameGroup.style.display = 'none';
-            } else {
-                title.textContent = 'Sign Up';
-                submitBtn.textContent = 'Sign Up';
-                toggleText.textContent = 'Already have an account? ';
-                nameGroup.style.display = 'block';
-            }
-        }
-
         function handleAuth(event) {
             event.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const name = document.getElementById('name').value || 'User';
 
-            currentUser = {
-                email: email,
-                name: name,
-                password: password
-            };
+            if (email && password) {
+                currentUser = { email, name };
+                localStorage.setItem('user', JSON.stringify(currentUser));
+                document.getElementById('authScreen').style.display = 'none';
+                document.getElementById('appScreen').style.display = 'block';
+                updateProfile();
+                alert(`Welcome ${name}! 🎉`);
+            }
+        }
 
-            document.getElementById('authScreen').style.display = 'none';
-            document.getElementById('appScreen').style.display = 'block';
-            loadContent();
+        function toggleAuth() {
+            isSignUp = !isSignUp;
+            const nameGroup = document.getElementById('nameGroup');
+            const authTitle = document.getElementById('authTitle');
+            const authSubmitBtn = document.getElementById('authSubmitBtn');
+            const authToggleText = document.getElementById('authToggleText');
+
+            if (isSignUp) {
+                nameGroup.style.display = 'block';
+                authTitle.textContent = 'Sign Up';
+                authSubmitBtn.textContent = 'Sign Up';
+                authToggleText.textContent = 'Already have an account? ';
+            } else {
+                nameGroup.style.display = 'none';
+                authTitle.textContent = 'Login';
+                authSubmitBtn.textContent = 'Login';
+                authToggleText.textContent = "Don't have an account? ";
+            }
         }
 
         function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                currentUser = null;
-                document.getElementById('appScreen').style.display = 'none';
-                document.getElementById('authScreen').style.display = 'flex';
-                document.getElementById('authForm').reset();
-                isLogin = true;
-                toggleAuth();
-            }
+            currentUser = null;
+            localStorage.removeItem('user');
+            document.getElementById('appScreen').style.display = 'none';
+            document.getElementById('authScreen').style.display = 'flex';
+            document.getElementById('authForm').reset();
+            isSignUp = false;
+            toggleAuth();
         }
 
-        // Navigation Functions
-        function showPage(pageId, element) {
-            // Hide all pages
+        // Page Navigation
+        function showPage(pageName, element) {
             const pages = document.querySelectorAll('.page');
             pages.forEach(page => page.classList.remove('active'));
+            document.getElementById(pageName).classList.add('active');
 
-            // Show selected page
-            document.getElementById(pageId).classList.add('active');
-
-            // Update sidebar active state
             const items = document.querySelectorAll('.sidebar-item');
             items.forEach(item => item.classList.remove('active'));
-            if (element) {
-                element.classList.add('active');
-            }
-
-            // Initialize page content
-            if (pageId === 'community') {
-                loadCommunityPosts();
-            } else if (pageId === 'lodging') {
-                loadHotels();
-            } else if (pageId === 'profile') {
-                loadProfile();
-            }
+            if (element) element.classList.add('active');
         }
 
         function showProfile() {
@@ -1364,231 +1263,204 @@
         }
 
         // Chat Functions
+        function toggleThinking() {
+            thinkingModeEnabled = document.getElementById('thinkingMode').checked;
+            console.log('Thinking mode:', thinkingModeEnabled);
+        }
+
         function sendMessage() {
             const input = document.getElementById('chatInput');
             const message = input.value.trim();
-            const model = document.getElementById('modelSelect').value;
 
             if (!message) return;
 
             // Add user message
-            addChatMessage(message, 'user');
+            addMessage(message, 'user');
             input.value = '';
 
-            // Simulate AI response
+            // Simulate AI response with thinking
             setTimeout(() => {
-                const responses = {
-                    gpt: `GPT-4 says: That's a great question about "${message.substring(0, 20)}...". Here's my response...`,
-                    gemini: `Gemini says: Interesting! Regarding "${message.substring(0, 20)}...", I think...`,
-                    claude: `Claude says: "${message.substring(0, 20)}..." - Let me provide some insight...`,
-                    deepseek: `DeepSeek says: Based on your query "${message.substring(0, 20)}...", here's what I found...`
-                };
-                addChatMessage(responses[model], 'bot');
+                if (thinkingModeEnabled) {
+                    addThinkingIndicator();
+                    setTimeout(() => {
+                        const responses = [
+                            'That\'s interesting! Let me help you with that.',
+                            'I understand. Here\'s my analysis...',
+                            'Great question! Here are some insights...',
+                            'That\'s a great point. Let me think about it...',
+                        ];
+                        const response = responses[Math.floor(Math.random() * responses.length)];
+                        addMessage(response, 'bot');
+                        stats.chats++;
+                    }, 1500);
+                } else {
+                    const responses = [
+                        'That\'s interesting! Let me help you with that.',
+                        'I understand. Here\'s my analysis...',
+                        'Great question! Here are some insights...',
+                        'That\'s a great point. Let me respond to that...',
+                    ];
+                    const response = responses[Math.floor(Math.random() * responses.length)];
+                    addMessage(response, 'bot');
+                    stats.chats++;
+                }
             }, 500);
         }
 
-        function addChatMessage(text, sender) {
-            const chatMessages = document.getElementById('chatMessages');
+        function addMessage(text, sender) {
+            const messagesContainer = document.getElementById('chatMessages');
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${sender}`;
-            messageDiv.innerHTML = `<div class="message-bubble">${text}</div>`;
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            const bubble = document.createElement('div');
+            bubble.className = 'message-bubble';
+            bubble.textContent = text;
+            messageDiv.appendChild(bubble);
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
 
-        // Image Generator
+        function addThinkingIndicator() {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot';
+            messageDiv.id = 'thinkingIndicator';
+            const bubble = document.createElement('div');
+            bubble.className = 'message-bubble thinking-indicator';
+            bubble.textContent = '🧠 Thinking...';
+            messageDiv.appendChild(bubble);
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Image Generation
         function generateImage() {
             const prompt = document.getElementById('imagePrompt').value;
             if (!prompt) {
-                alert('Please enter a description');
+                alert('Please enter a prompt');
                 return;
             }
 
-            const result = document.getElementById('imageResult');
-            result.innerHTML = '<p style="text-align: center; color: #667eea; font-weight: 600;">Generating image...</p>';
+            const container = document.getElementById('generatedImageContainer');
+            container.innerHTML = '<p style="color: #667eea;">Generating image...</p>';
 
             setTimeout(() => {
-                result.innerHTML = `
-                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px; border-radius: 10px; text-align: center; color: white; font-size: 5em;">
-                        🎨 Generated Image
+                container.innerHTML = `
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                        width: 300px; height: 300px; margin: 20px auto; border-radius: 10px; 
+                        display: flex; align-items: center; justify-content: center; color: white; font-size: 3em;">
+                        🖼️
                     </div>
-                    <p style="text-align: center; margin-top: 15px; color: #666;">
-                        Image based on: "${prompt.substring(0, 50)}${prompt.length > 50 ? '...' : ''}"
-                    </p>
+                    <p style="text-align: center; color: #666; margin-top: 10px;">Generated: ${prompt}</p>
                 `;
-            }, 1000);
+                stats.images++;
+            }, 2000);
         }
 
-        // Code Generator
+        // Code Generation
         function generateCode() {
             const prompt = document.getElementById('codePrompt').value;
             const language = document.getElementById('codeLanguage').value;
 
             if (!prompt) {
-                alert('Please enter what code you need');
+                alert('Please enter code requirements');
                 return;
             }
 
-            const result = document.getElementById('codeResult');
-            
-            const codeExamples = {
-                Python: `def calculate_factorial(n):
-    if n == 0 or n == 1:
-        return 1
-    return n * calculate_factorial(n - 1)
+            const container = document.getElementById('generatedCodeContainer');
+            container.innerHTML = '<p style="color: #667eea;">Generating code...</p>';
 
-result = calculate_factorial(5)
-print(f"Factorial: {result}")`,
-                JavaScript: `function calculateFactorial(n) {
-    if (n === 0 || n === 1) return 1;
-    return n * calculateFactorial(n - 1);
-}
-
-const result = calculateFactorial(5);
-console.log(`Factorial: ${result}`);`,
-                Java: `public class Factorial {
-    public static int calculate(int n) {
-        if (n == 0 || n == 1) return 1;
-        return n * calculate(n - 1);
-    }
-    
-    public static void main(String[] args) {
-        System.out.println("Factorial: " + calculate(5));
-    }
-}`,
-                "C++": `#include <iostream>
-using namespace std;
-
-int factorial(int n) {
-    if (n == 0 || n == 1) return 1;
-    return n * factorial(n - 1);
-}
-
-int main() {
-    cout << "Factorial: " << factorial(5) << endl;
-    return 0;
-}`,
-                PHP: `<?php
-function calculateFactorial($n) {
-    if ($n == 0 || $n == 1) return 1;
-    return $n * calculateFactorial($n - 1);
-}
-
-echo "Factorial: " . calculateFactorial(5);
-?>`,
-                Ruby: `def calculate_factorial(n)
-    return 1 if n == 0 || n == 1
-    n * calculate_factorial(n - 1)
-end
-
-puts "Factorial: #{calculate_factorial(5)}"`
-            };
-
-            result.innerHTML = `
-                <div class="code-section" style="margin-top: 20px;">
-                    <h3 style="color: #667eea; margin-bottom: 10px;">Generated ${language} Code:</h3>
-                    <div class="code-block">${codeExamples[language]}</div>
-                    <button class="auth-btn" onclick="copyCode()" style="margin-top: 15px;">📋 Copy Code</button>
-                </div>
-            `;
-        }
-
-        function copyCode() {
-            const codeBlock = document.querySelector('.code-block');
-            const text = codeBlock.textContent;
-            navigator.clipboard.writeText(text).then(() => {
-                alert('Code copied to clipboard!');
-            });
+            setTimeout(() => {
+                const sampleCode = `// ${language} code generated
+function example() {
+    console.log("${prompt}");
+    return true;
+}`;
+                container.innerHTML = `<div class="code-block">${sampleCode}</div>`;
+                stats.bookings++;
+            }, 1500);
         }
 
         // Community Posts
-        function loadCommunityPosts() {
-            const container = document.getElementById('postsContainer');
-            container.innerHTML = '';
-
-            posts.forEach(post => {
-                const postCard = document.createElement('div');
-                postCard.className = 'post-card';
-                postCard.innerHTML = `
+        function showCreatePostForm() {
+            const content = prompt('What would you like to share?');
+            if (content) {
+                const container = document.getElementById('postsContainer');
+                const postDiv = document.createElement('div');
+                postDiv.className = 'post-card';
+                postDiv.innerHTML = `
                     <div class="post-header">
-                        <span class="post-author">👤 ${post.author}</span>
-                        <span style="color: #999; font-size: 0.9em;">2 hours ago</span>
+                        <div class="post-author">${currentUser.name}</div>
+                        <div style="color: #999; font-size: 0.9em;">Just now</div>
                     </div>
-                    <p style="margin-bottom: 15px; line-height: 1.6;">${post.content}</p>
+                    <p>${content}</p>
                     <div class="post-actions">
-                        <button class="post-action-btn">❤️ Like (${post.likes})</button>
-                        <button class="post-action-btn">💬 Comment (${post.comments})</button>
-                        <button class="post-action-btn">↗️ Share</button>
+                        <button class="post-action-btn">❤️ Like</button>
+                        <button class="post-action-btn">💬 Comment</button>
+                        <button class="post-action-btn">📤 Share</button>
                     </div>
                 `;
-                container.appendChild(postCard);
-            });
+                container.insertBefore(postDiv, container.firstChild);
+            }
         }
 
-        // Lodging Functions
-        function loadHotels() {
-            const grid = document.getElementById('hotelsGrid');
-            grid.innerHTML = '';
+        // Hotel Booking
+        function searchHotels() {
+            const location = document.getElementById('location').value;
+            if (!location) {
+                alert('Please enter a location');
+                return;
+            }
 
-            hotels.forEach(hotel => {
-                const card = document.createElement('div');
-                card.className = 'hotel-card';
-                card.innerHTML = `
-                    <div class="hotel-image">${hotel.image}</div>
+            const hotels = [
+                { name: 'Luxury Plaza', rating: '⭐⭐⭐⭐⭐', price: '$250/night', amenities: ['WiFi', 'Pool', 'Spa'] },
+                { name: 'Grand Hotel', rating: '⭐⭐⭐⭐', price: '$180/night', amenities: ['WiFi', 'Gym', 'Restaurant'] },
+                { name: 'Budget Inn', rating: '⭐⭐⭐', price: '$80/night', amenities: ['WiFi', 'Parking'] },
+            ];
+
+            const container = document.getElementById('hotelsGrid');
+            container.innerHTML = '';
+
+            hotels.forEach((hotel, index) => {
+                const hotelCard = document.createElement('div');
+                hotelCard.className = 'hotel-card';
+                hotelCard.innerHTML = `
+                    <div class="hotel-image">🏨</div>
                     <div class="hotel-info">
                         <div class="hotel-name">${hotel.name}</div>
-                        <div class="hotel-location">📍 ${hotel.location}</div>
-                        <div class="hotel-rating">⭐ ${hotel.rating} (${hotel.reviews} reviews)</div>
-                        <div class="hotel-price">$${hotel.price}/night</div>
+                        <div class="hotel-location">${location}</div>
+                        <div class="hotel-rating">${hotel.rating}</div>
+                        <div class="hotel-price">${hotel.price}</div>
                         <div class="hotel-amenities">
                             ${hotel.amenities.map(a => `<span class="amenity-tag">${a}</span>`).join('')}
                         </div>
                         <div class="hotel-actions">
-                            <button class="book-btn" onclick="openBooking(${hotel.id}, '${hotel.name}')">Book Now</button>
-                            <button class="favorite-btn" onclick="toggleFavorite(this, ${hotel.id})">❤️</button>
+                            <button class="book-btn" onclick="openBookingModal('${hotel.name}')">Book Now</button>
+                            <button class="favorite-btn" onclick="toggleFavorite(this)">♥️ Save</button>
                         </div>
                     </div>
                 `;
-                grid.appendChild(card);
+                container.appendChild(hotelCard);
             });
         }
 
-        function openBooking(hotelId, hotelName) {
-            bookingData.hotelId = hotelId;
-            bookingData.hotelName = hotelName;
-            document.getElementById('bookingHotelName').textContent = `Book ${hotelName}`;
+        function openBookingModal(hotelName) {
             document.getElementById('bookingModal').classList.add('active');
         }
 
-        function closeBooking() {
+        function closeBookingModal() {
             document.getElementById('bookingModal').classList.remove('active');
         }
 
-        function submitBooking(event) {
+        function completeBooking(event) {
             event.preventDefault();
-            alert(`✅ Booking confirmed for ${bookingData.hotelName}!\n\nYour reservation details have been sent to your email.`);
-            closeBooking();
-            document.querySelector('.modal-content form').reset();
+            alert('Booking completed! 🎉');
+            closeBookingModal();
+            stats.bookings++;
+            updateProfile();
         }
 
-        function toggleFavorite(btn, hotelId) {
+        function toggleFavorite(btn) {
             btn.classList.toggle('favorited');
-            if (btn.classList.contains('favorited')) {
-                favorites.push(hotelId);
-                btn.textContent = '❤️';
-            } else {
-                favorites = favorites.filter(id => id !== hotelId);
-                btn.textContent = '❤️';
-            }
-        }
-
-        // Profile
-        function loadProfile() {
-            document.getElementById('profileName').textContent = currentUser?.name || 'User';
-            document.getElementById('profileEmail').textContent = currentUser?.email || 'user@example.com';
-            document.getElementById('statChats').textContent = Math.floor(Math.random() * 50) + 10;
-            document.getElementById('statBookings').textContent = Math.floor(Math.random() * 10) + 1;
-            document.getElementById('statFavorites').textContent = favorites.length;
         }
 
         // Settings
@@ -1596,25 +1468,27 @@ puts "Factorial: #{calculate_factorial(5)}"`
             element.classList.toggle('active');
         }
 
-        // Load Content
-        function loadContent() {
-            loadProfile();
-            loadCommunityPosts();
-            loadHotels();
-        }
-
-        // Close modal on outside click
-        window.onclick = function(event) {
-            const modal = document.getElementById('bookingModal');
-            if (event.target === modal) {
-                closeBooking();
+        // Profile
+        function updateProfile() {
+            if (currentUser) {
+                document.getElementById('profileName').textContent = currentUser.name;
+                document.getElementById('profileEmail').textContent = currentUser.email;
+                document.getElementById('chatCount').textContent = stats.chats;
+                document.getElementById('imageCount').textContent = stats.images;
+                document.getElementById('bookingCount').textContent = stats.bookings;
             }
         }
 
-        // Enter key to send chat
-        document.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && document.getElementById('chatInput') === document.activeElement) {
-                sendMessage();
+        // Initialize
+        window.addEventListener('load', () => {
+            const savedUser = localStorage.getItem('user');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                document.getElementById('authScreen').style.display = 'none';
+                document.getElementById('appScreen').style.display = 'block';
+                updateProfile();
+            } else {
+                document.getElementById('authScreen').style.display = 'flex';
             }
         });
     </script>
