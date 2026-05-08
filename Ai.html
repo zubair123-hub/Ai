@@ -311,6 +311,19 @@
             flex-direction: column;
         }
 
+        .chat-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px 10px 0 0;
+            font-weight: 600;
+        }
+
+        .chat-status {
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+
         .chat-messages {
             flex: 1;
             overflow-y: auto;
@@ -338,6 +351,13 @@
             text-align: right;
         }
 
+        .message.system {
+            text-align: center;
+            color: #999;
+            font-size: 0.9em;
+            margin: 10px 0;
+        }
+
         .message-bubble {
             display: inline-block;
             max-width: 70%;
@@ -356,7 +376,7 @@
             color: #333;
         }
 
-        .message.google .message-bubble {
+        .message.api .message-bubble {
             background: #fff3cd;
             color: #333;
             border-left: 4px solid #ffc107;
@@ -402,20 +422,19 @@
             color: #c62828;
         }
 
-        .google-search-btn {
-            background: linear-gradient(135deg, #4285F4 0%, #EA4335 100%);
-            color: white;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9em;
-            margin-top: 8px;
-            transition: all 0.3s;
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
-        .google-search-btn:hover {
-            transform: scale(1.05);
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .chat-input-area {
@@ -458,8 +477,12 @@
             background: #764ba2;
         }
 
-        .model-selector,
-        .thinking-toggle {
+        .chat-send:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .model-selector {
             padding: 10px;
             border: 2px solid #ddd;
             border-radius: 5px;
@@ -468,15 +491,30 @@
             font-size: 0.9em;
         }
 
-        .thinking-checkbox {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .api-key-input {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
             font-size: 0.9em;
         }
 
-        .thinking-checkbox input {
-            cursor: pointer;
+        .api-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .api-status.connected {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .api-status.disconnected {
+            background: #ffcdd2;
+            color: #c62828;
         }
 
         /* Image Generator */
@@ -508,277 +546,6 @@
             max-width: 100%;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Code Generator */
-        .code-section {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .code-block {
-            background: #2d2d2d;
-            color: #f8f8f2;
-            padding: 15px;
-            border-radius: 5px;
-            overflow-x: auto;
-            font-family: 'Courier New', monospace;
-            margin-top: 10px;
-        }
-
-        /* Community Posts */
-        .posts-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .post-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .post-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-        }
-
-        .post-author {
-            font-weight: 600;
-            color: #667eea;
-        }
-
-        .post-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .post-action-btn {
-            flex: 1;
-            padding: 8px;
-            background: #f0f0f0;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .post-action-btn:hover {
-            background: #e0e0e0;
-        }
-
-        /* Lodging System */
-        .lodging-container {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-        }
-
-        .search-filters {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
-        }
-
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .filter-group label {
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #333;
-        }
-
-        .filter-group input,
-        .filter-group select {
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            font-size: 0.95em;
-        }
-
-        .hotels-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .hotel-card {
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            overflow: hidden;
-            transition: all 0.3s;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .hotel-card:hover {
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            transform: translateY(-5px);
-        }
-
-        .hotel-image {
-            width: 100%;
-            height: 200px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 3em;
-        }
-
-        .hotel-info {
-            padding: 20px;
-        }
-
-        .hotel-name {
-            font-size: 1.3em;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #333;
-        }
-
-        .hotel-location {
-            color: #666;
-            margin-bottom: 10px;
-            font-size: 0.9em;
-        }
-
-        .hotel-rating {
-            color: #f39c12;
-            margin-bottom: 12px;
-            font-weight: 600;
-        }
-
-        .hotel-price {
-            font-size: 1.5em;
-            color: #667eea;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-
-        .hotel-amenities {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 15px;
-        }
-
-        .amenity-tag {
-            background: #f0f0f0;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8em;
-            color: #666;
-        }
-
-        .hotel-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .book-btn,
-        .favorite-btn {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .book-btn {
-            background: #667eea;
-            color: white;
-        }
-
-        .book-btn:hover {
-            background: #764ba2;
-        }
-
-        .favorite-btn {
-            background: #f0f0f0;
-            color: #333;
-            border: 2px solid #ddd;
-        }
-
-        .favorite-btn.favorited {
-            background: #ff6b6b;
-            color: white;
-            border-color: #ff6b6b;
-        }
-
-        /* Booking Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 15px;
-        }
-
-        .modal-header h2 {
-            color: #667eea;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 1.5em;
-            cursor: pointer;
-            color: #666;
-        }
-
-        .modal-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
         }
 
         /* Profile Page */
@@ -931,18 +698,6 @@
                 grid-template-columns: 1fr;
             }
 
-            .search-filters {
-                grid-template-columns: 1fr;
-            }
-
-            .hotels-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .profile-stats {
-                grid-template-columns: 1fr;
-            }
-
             nav {
                 padding: 10px 15px;
             }
@@ -966,10 +721,6 @@
                 height: 400px;
             }
 
-            .modal-content {
-                width: 95%;
-            }
-
             .feature-card {
                 padding: 20px;
             }
@@ -981,7 +732,7 @@
     <div id="splashScreen">
         <div class="splash-content">
             <h1>🚀 AI Hub</h1>
-            <p>Your Complete AI & Lodging Platform</p>
+            <p>Connected to Real AI APIs</p>
         </div>
     </div>
 
@@ -1015,7 +766,7 @@
     <div id="appScreen">
         <!-- Navigation -->
         <nav>
-            <h1>🚀 AI Hub</h1>
+            <h1>🚀 AI Hub - Connected API System</h1>
             <div class="nav-buttons">
                 <button class="nav-btn" onclick="showProfile()">👤 Profile</button>
                 <button class="nav-btn" onclick="logout()">🚪 Logout</button>
@@ -1026,11 +777,9 @@
         <div class="sidebar">
             <div class="sidebar-item active" onclick="showPage('home', this)">🏠 Home</div>
             <div class="sidebar-item" onclick="showPage('chat', this)">💬 AI Chat</div>
-            <div class="sidebar-item" onclick="showPage('imageGen', this)">🎨 Image Generator</div>
-            <div class="sidebar-item" onclick="showPage('codeGen', this)">💻 Code Generator</div>
-            <div class="sidebar-item" onclick="showPage('community', this)">👥 Community Posts</div>
-            <div class="sidebar-item" onclick="showPage('lodging', this)">🏨 Lodging Booking</div>
+            <div class="sidebar-item" onclick="showPage('apiSettings', this)">🔧 API Settings</div>
             <div class="sidebar-item" onclick="showPage('settings', this)">⚙️ Settings</div>
+            <div class="sidebar-item" onclick="showPage('profile', this)">👤 Profile</div>
         </div>
 
         <!-- Content Area -->
@@ -1038,32 +787,17 @@
             <!-- Home Page -->
             <div id="home" class="page active">
                 <h1>Welcome to AI Hub! 🎉</h1>
-                <p style="margin: 20px 0; color: #666;">Explore all our amazing AI features and book your perfect hotel</p>
+                <p style="margin: 20px 0; color: #666;">Your AI Platform Connected to Real APIs</p>
                 <div class="dashboard">
                     <div class="feature-card" onclick="showPage('chat', null)">
                         <div class="icon">💬</div>
                         <h3>AI Chat</h3>
-                        <p>Chat with advanced thinking system</p>
+                        <p>Talk to real AI APIs</p>
                     </div>
-                    <div class="feature-card" onclick="showPage('imageGen', null)">
-                        <div class="icon">🎨</div>
-                        <h3>Image Generator</h3>
-                        <p>Generate stunning AI images</p>
-                    </div>
-                    <div class="feature-card" onclick="showPage('codeGen', null)">
-                        <div class="icon">💻</div>
-                        <h3>Code Generator</h3>
-                        <p>Generate code in any language</p>
-                    </div>
-                    <div class="feature-card" onclick="showPage('community', null)">
-                        <div class="icon">👥</div>
-                        <h3>Community Posts</h3>
-                        <p>Share and explore community content</p>
-                    </div>
-                    <div class="feature-card" onclick="showPage('lodging', null)">
-                        <div class="icon">🏨</div>
-                        <h3>Lodging Booking</h3>
-                        <p>Book luxury hotels worldwide</p>
+                    <div class="feature-card" onclick="showPage('apiSettings', null)">
+                        <div class="icon">🔧</div>
+                        <h3>API Settings</h3>
+                        <p>Configure your API keys</p>
                     </div>
                     <div class="feature-card" onclick="showPage('settings', null)">
                         <div class="icon">⚙️</div>
@@ -1075,102 +809,64 @@
 
             <!-- AI Chat Page -->
             <div id="chat" class="page">
-                <h1>💬 AI Chat - Advanced Thinking System 🧠</h1>
-                <div style="margin: 20px 0; display: flex; gap: 10px; flex-wrap: wrap;">
-                    <select id="modelSelect" class="model-selector">
-                        <option value="gpt">GPT-4 (Advanced)</option>
-                        <option value="gemini">Gemini (Quick)</option>
-                        <option value="claude">Claude (Balanced)</option>
-                        <option value="deepseek">DeepSeek (Deep Analysis)</option>
-                    </select>
-                    <label class="thinking-checkbox">
-                        <input type="checkbox" id="thinkingMode" checked onchange="toggleThinking()">
-                        🧠 Enable Powerful Thinking
-                    </label>
-                </div>
                 <div class="chat-container">
+                    <div class="chat-header">
+                        💬 Real AI Chat
+                        <div class="chat-status">Connected to: <span id="connectedModel">Google Generative AI</span> <span class="api-status connected" id="apiStatus">✓ Ready</span></div>
+                    </div>
                     <div class="chat-messages" id="chatMessages"></div>
                     <div class="chat-input-area">
                         <div class="chat-controls">
-                            <input type="text" class="chat-input" id="chatInput" placeholder="Ask me anything..." onkeypress="if(event.key==='Enter')sendMessage()">
-                            <button class="chat-send" onclick="sendMessage()">Send</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Image Generator Page -->
-            <div id="imageGen" class="page">
-                <h1>🎨 Image Generator</h1>
-                <div class="generator-container">
-                    <div class="form-group">
-                        <label>Image Prompt</label>
-                        <textarea id="imagePrompt" placeholder="Describe the image you want to generate..."></textarea>
-                    </div>
-                    <button class="auth-btn" onclick="generateImage()">Generate Image</button>
-                    <div class="generated-image" id="generatedImageContainer"></div>
-                </div>
-            </div>
-
-            <!-- Code Generator Page -->
-            <div id="codeGen" class="page">
-                <h1>💻 Code Generator</h1>
-                <div class="generator-container">
-                    <div class="form-group">
-                        <label>Code Requirements</label>
-                        <textarea id="codePrompt" placeholder="Describe the code you need..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Language</label>
-                        <select id="codeLanguage" style="width: 100%; padding: 10px;">
-                            <option value="javascript">JavaScript</option>
-                            <option value="python">Python</option>
-                            <option value="java">Java</option>
-                            <option value="cpp">C++</option>
-                            <option value="html">HTML</option>
-                        </select>
-                    </div>
-                    <button class="auth-btn" onclick="generateCode()">Generate Code</button>
-                    <div class="code-section" id="generatedCodeContainer"></div>
-                </div>
-            </div>
-
-            <!-- Community Posts Page -->
-            <div id="community" class="page">
-                <h1>👥 Community Posts</h1>
-                <button class="auth-btn" style="margin-bottom: 20px;" onclick="showCreatePostForm()">+ Create Post</button>
-                <div class="posts-container" id="postsContainer"></div>
-            </div>
-
-            <!-- Lodging Booking Page -->
-            <div id="lodging" class="page">
-                <h1>🏨 Lodging Booking</h1>
-                <div class="lodging-container">
-                    <div class="search-filters">
-                        <div class="filter-group">
-                            <label>Location</label>
-                            <input type="text" id="location" placeholder="City name">
-                        </div>
-                        <div class="filter-group">
-                            <label>Check-in</label>
-                            <input type="date" id="checkIn">
-                        </div>
-                        <div class="filter-group">
-                            <label>Check-out</label>
-                            <input type="date" id="checkOut">
-                        </div>
-                        <div class="filter-group">
-                            <label>Guests</label>
-                            <select id="guests">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4+</option>
+                            <select id="modelSelect" class="model-selector" onchange="changeModel()">
+                                <option value="google">🔍 Google Generative AI</option>
+                                <option value="openai">🤖 OpenAI GPT</option>
+                                <option value="huggingface">🤗 HuggingFace</option>
                             </select>
+                            <input type="text" class="chat-input" id="chatInput" placeholder="Ask me anything..." onkeypress="if(event.key==='Enter')sendMessage()">
+                            <button class="chat-send" id="sendBtn" onclick="sendMessage()">Send</button>
                         </div>
-                        <button class="auth-btn" style="padding: 10px;" onclick="searchHotels()">Search</button>
                     </div>
-                    <div class="hotels-grid" id="hotelsGrid"></div>
+                </div>
+            </div>
+
+            <!-- API Settings Page -->
+            <div id="apiSettings" class="page">
+                <h1>🔧 API Settings</h1>
+                <div class="settings-container">
+                    <h3 style="margin-bottom: 20px; color: #667eea;">Configure Your API Keys</h3>
+                    
+                    <div class="setting-item" style="flex-direction: column; align-items: flex-start;">
+                        <label style="font-weight: 600; margin-bottom: 10px;">Google Generative AI API Key</label>
+                        <input type="password" id="googleAPIKey" class="api-key-input" placeholder="Enter your Google API key..." value="">
+                        <small style="color: #999; margin-top: 5px;">Get it from: <a href="https://makersuite.google.com/app/apikey" target="_blank" style="color: #667eea;">Google AI Studio</a></small>
+                        <button class="auth-btn" style="margin-top: 10px; width: auto; padding: 8px 16px;" onclick="saveGoogleAPIKey()">Save Google Key</button>
+                    </div>
+
+                    <div class="setting-item" style="flex-direction: column; align-items: flex-start;">
+                        <label style="font-weight: 600; margin-bottom: 10px;">OpenAI API Key</label>
+                        <input type="password" id="openaiAPIKey" class="api-key-input" placeholder="Enter your OpenAI API key...">
+                        <small style="color: #999; margin-top: 5px;">Get it from: <a href="https://platform.openai.com/api-keys" target="_blank" style="color: #667eea;">OpenAI Platform</a></small>
+                        <button class="auth-btn" style="margin-top: 10px; width: auto; padding: 8px 16px;" onclick="saveOpenAIAPIKey()">Save OpenAI Key</button>
+                    </div>
+
+                    <div class="setting-item" style="flex-direction: column; align-items: flex-start;">
+                        <label style="font-weight: 600; margin-bottom: 10px;">HuggingFace API Key</label>
+                        <input type="password" id="huggingfaceAPIKey" class="api-key-input" placeholder="Enter your HuggingFace API key...">
+                        <small style="color: #999; margin-top: 5px;">Get it from: <a href="https://huggingface.co/settings/tokens" target="_blank" style="color: #667eea;">HuggingFace Settings</a></small>
+                        <button class="auth-btn" style="margin-top: 10px; width: auto; padding: 8px 16px;" onclick="saveHuggingFaceAPIKey()">Save HuggingFace Key</button>
+                    </div>
+
+                    <div style="margin-top: 30px; padding: 20px; background: #fff3cd; border-radius: 8px;">
+                        <h4 style="color: #856404; margin-bottom: 10px;">📌 How to Use:</h4>
+                        <ol style="color: #856404; margin-left: 20px;">
+                            <li>Get API keys from the respective platforms</li>
+                            <li>Paste them in the fields above</li>
+                            <li>Click "Save" buttons to store them securely</li>
+                            <li>Go to AI Chat and start asking questions</li>
+                            <li>Your questions will be sent to real AI APIs</li>
+                            <li>Real answers will appear on your screen</li>
+                        </ol>
+                    </div>
                 </div>
             </div>
 
@@ -1186,15 +882,15 @@
                     <div class="profile-stats">
                         <div class="stat">
                             <div class="stat-number" id="chatCount">0</div>
-                            <div class="stat-label">AI Chats</div>
+                            <div class="stat-label">API Calls Made</div>
                         </div>
                         <div class="stat">
-                            <div class="stat-number" id="imageCount">0</div>
-                            <div class="stat-label">Generated Images</div>
+                            <div class="stat-number" id="totalQuestions">0</div>
+                            <div class="stat-label">Questions Asked</div>
                         </div>
                         <div class="stat">
-                            <div class="stat-number" id="bookingCount">0</div>
-                            <div class="stat-label">Bookings</div>
+                            <div class="stat-number" id="activeAPIs">0</div>
+                            <div class="stat-label">Active APIs</div>
                         </div>
                     </div>
                 </div>
@@ -1209,11 +905,7 @@
                         <div class="toggle-switch" onclick="toggleSetting(this)"></div>
                     </div>
                     <div class="setting-item">
-                        <div class="setting-label">Notifications</div>
-                        <div class="toggle-switch active" onclick="toggleSetting(this)"></div>
-                    </div>
-                    <div class="setting-item">
-                        <div class="setting-label">Auto-save</div>
+                        <div class="setting-label">Auto-connect to APIs</div>
                         <div class="toggle-switch active" onclick="toggleSetting(this)"></div>
                     </div>
                     <button class="logout-btn" onclick="logout()">Logout</button>
@@ -1222,106 +914,260 @@
         </div>
     </div>
 
-    <!-- Booking Modal -->
-    <div id="bookingModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Complete Booking</h2>
-                <button class="close-btn" onclick="closeBookingModal()">✕</button>
-            </div>
-            <form class="modal-form" onsubmit="completeBooking(event)">
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" required>
-                </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" required>
-                </div>
-                <div class="form-group">
-                    <label>Phone</label>
-                    <input type="tel" required>
-                </div>
-                <button type="submit" class="auth-btn">Complete Booking</button>
-            </form>
-        </div>
-    </div>
-
     <script>
-        // Global State
+        // ============================================================
+        // REAL AI API INTEGRATION SYSTEM
+        // ============================================================
+        
         let currentUser = null;
         let isSignUp = false;
-        let thinkingModeEnabled = true;
+        let currentModel = 'google';
+        let apiKeys = {
+            google: localStorage.getItem('googleAPIKey') || '',
+            openai: localStorage.getItem('openaiAPIKey') || '',
+            huggingface: localStorage.getItem('huggingfaceAPIKey') || ''
+        };
+
         let stats = {
             chats: 0,
-            images: 0,
-            bookings: 0
+            totalQuestions: 0,
+            activeAPIs: 0
         };
 
-        // Advanced Thinking System
-        const thinkingTemplates = {
-            easy: {
-                label: "Easy",
-                class: "difficulty-easy",
-                steps: [
-                    "📌 Understanding the question",
-                    "💡 Recalling relevant information",
-                    "✅ Formulating answer"
-                ]
-            },
-            medium: {
-                label: "Medium",
-                class: "difficulty-medium",
-                steps: [
-                    "🔍 Analyzing the question deeply",
-                    "🧩 Breaking into sub-problems",
-                    "🔗 Finding connections",
-                    "💭 Reasoning through options",
-                    "✅ Constructing comprehensive answer"
-                ]
-            },
-            hard: {
-                label: "Hard - Requesting Google AI",
-                class: "difficulty-hard",
-                steps: [
-                    "🔍 Complex question detected",
-                    "🤔 Analyzing multiple perspectives",
-                    "⚠️ This requires deep research capability",
-                    "📡 Routing to Google AI API for advanced analysis",
-                    "🌐 Searching latest information...",
-                    "📊 Aggregating data from multiple sources",
-                    "✅ Formulating expert-level response"
-                ]
+        // ============================================================
+        // GOOGLE GENERATIVE AI INTEGRATION
+        // ============================================================
+        async function sendToGoogleAI(question) {
+            try {
+                const apiKey = apiKeys.google;
+                if (!apiKey) {
+                    throw new Error('Google API key not configured');
+                }
+
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+
+                const payload = {
+                    contents: [{
+                        parts: [{
+                            text: question
+                        }]
+                    }]
+                };
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const answer = data.candidates[0].content.parts[0].text;
+                return answer;
+            } catch (error) {
+                return `❌ Google AI Error: ${error.message}`;
             }
-        };
-
-        // Question difficulty detection
-        function detectDifficulty(question) {
-            const hardKeywords = [
-                'quantum', 'relativity', 'complex algorithm', 'machine learning',
-                'neural networks', 'blockchain', 'cryptocurrency', 'advanced mathematics',
-                'research', 'latest', 'recent', 'cutting edge', 'experimental'
-            ];
-
-            const mediumKeywords = [
-                'how', 'why', 'explain', 'what', 'analyze', 'compare',
-                'problem solving', 'technical', 'code', 'concept'
-            ];
-
-            const lowerQuestion = question.toLowerCase();
-
-            for (let keyword of hardKeywords) {
-                if (lowerQuestion.includes(keyword)) return 'hard';
-            }
-
-            for (let keyword of mediumKeywords) {
-                if (lowerQuestion.includes(keyword)) return 'medium';
-            }
-
-            return 'easy';
         }
 
-        // Auth Functions
+        // ============================================================
+        // OPENAI GPT INTEGRATION
+        // ============================================================
+        async function sendToOpenAI(question) {
+            try {
+                const apiKey = apiKeys.openai;
+                if (!apiKey) {
+                    throw new Error('OpenAI API key not configured');
+                }
+
+                const url = 'https://api.openai.com/v1/chat/completions';
+
+                const payload = {
+                    model: 'gpt-3.5-turbo',
+                    messages: [{
+                        role: 'user',
+                        content: question
+                    }],
+                    max_tokens: 1000
+                };
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const answer = data.choices[0].message.content;
+                return answer;
+            } catch (error) {
+                return `❌ OpenAI Error: ${error.message}`;
+            }
+        }
+
+        // ============================================================
+        // HUGGINGFACE INTEGRATION
+        // ============================================================
+        async function sendToHuggingFace(question) {
+            try {
+                const apiKey = apiKeys.huggingface;
+                if (!apiKey) {
+                    throw new Error('HuggingFace API key not configured');
+                }
+
+                const url = 'https://api-inference.huggingface.co/models/meta-llama/Llama-2-7b-chat-hf';
+
+                const payload = {
+                    inputs: question,
+                    parameters: {
+                        max_length: 500
+                    }
+                };
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const answer = data[0].generated_text;
+                return answer;
+            } catch (error) {
+                return `❌ HuggingFace Error: ${error.message}`;
+            }
+        }
+
+        // ============================================================
+        // MAIN MESSAGE HANDLER
+        // ============================================================
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const question = input.value.trim();
+
+            if (!question) return;
+
+            // Disable send button
+            document.getElementById('sendBtn').disabled = true;
+
+            // Add user message
+            addMessage(question, 'user');
+            input.value = '';
+
+            // Show loading indicator
+            addMessage(`🔄 Connecting to ${currentModel.toUpperCase()} API...`, 'system');
+
+            // Call appropriate API
+            let answer = '';
+            if (currentModel === 'google') {
+                answer = await sendToGoogleAI(question);
+            } else if (currentModel === 'openai') {
+                answer = await sendToOpenAI(question);
+            } else if (currentModel === 'huggingface') {
+                answer = await sendToHuggingFace(question);
+            }
+
+            // Remove loading message
+            const messages = document.getElementById('chatMessages');
+            if (messages.lastChild && messages.lastChild.classList.contains('system')) {
+                messages.removeChild(messages.lastChild);
+            }
+
+            // Add AI response
+            addMessage(answer, 'api');
+
+            // Update stats
+            stats.chats++;
+            stats.totalQuestions++;
+            updateProfile();
+
+            // Re-enable send button
+            document.getElementById('sendBtn').disabled = false;
+        }
+
+        function addMessage(text, sender) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            const bubble = document.createElement('div');
+            bubble.className = 'message-bubble';
+            bubble.textContent = text;
+            messageDiv.appendChild(bubble);
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // ============================================================
+        // API KEY MANAGEMENT
+        // ============================================================
+        function saveGoogleAPIKey() {
+            const key = document.getElementById('googleAPIKey').value.trim();
+            if (!key) {
+                alert('Please enter a Google API key');
+                return;
+            }
+            apiKeys.google = key;
+            localStorage.setItem('googleAPIKey', key);
+            alert('✅ Google API key saved successfully!');
+            updateProfile();
+        }
+
+        function saveOpenAIAPIKey() {
+            const key = document.getElementById('openaiAPIKey').value.trim();
+            if (!key) {
+                alert('Please enter an OpenAI API key');
+                return;
+            }
+            apiKeys.openai = key;
+            localStorage.setItem('openaiAPIKey', key);
+            alert('✅ OpenAI API key saved successfully!');
+            updateProfile();
+        }
+
+        function saveHuggingFaceAPIKey() {
+            const key = document.getElementById('huggingfaceAPIKey').value.trim();
+            if (!key) {
+                alert('Please enter a HuggingFace API key');
+                return;
+            }
+            apiKeys.huggingface = key;
+            localStorage.setItem('huggingfaceAPIKey', key);
+            alert('✅ HuggingFace API key saved successfully!');
+            updateProfile();
+        }
+
+        function changeModel() {
+            currentModel = document.getElementById('modelSelect').value;
+            const modelNames = {
+                'google': 'Google Generative AI',
+                'openai': 'OpenAI GPT',
+                'huggingface': 'HuggingFace'
+            };
+            document.getElementById('connectedModel').textContent = modelNames[currentModel];
+            addMessage(`✅ Switched to ${modelNames[currentModel]}`, 'system');
+        }
+
+        // ============================================================
+        // AUTH FUNCTIONS
+        // ============================================================
         function handleAuth(event) {
             event.preventDefault();
             const email = document.getElementById('email').value;
@@ -1368,7 +1214,9 @@
             toggleAuth();
         }
 
-        // Page Navigation
+        // ============================================================
+        // PAGE NAVIGATION
+        // ============================================================
         function showPage(pageName, element) {
             const pages = document.querySelectorAll('.page');
             pages.forEach(page => page.classList.remove('active'));
@@ -1383,266 +1231,42 @@
             showPage('profile', null);
         }
 
-        // Chat Functions
-        function toggleThinking() {
-            thinkingModeEnabled = document.getElementById('thinkingMode').checked;
-        }
-
-        function sendMessage() {
-            const input = document.getElementById('chatInput');
-            const message = input.value.trim();
-
-            if (!message) return;
-
-            // Add user message
-            addMessage(message, 'user');
-            input.value = '';
-
-            // Detect difficulty
-            const difficulty = detectDifficulty(message);
-
-            // Simulate AI response with advanced thinking
-            setTimeout(() => {
-                if (thinkingModeEnabled) {
-                    showThinkingProcess(difficulty, message);
-                } else {
-                    const responses = [
-                        'That\'s interesting! Let me help you with that.',
-                        'I understand. Here\'s my analysis...',
-                        'Great question! Here are some insights...',
-                        'That\'s a great point. Let me respond to that...',
-                    ];
-                    const response = responses[Math.floor(Math.random() * responses.length)];
-                    addMessage(response, 'bot');
-                }
-                stats.chats++;
-            }, 500);
-        }
-
-        function showThinkingProcess(difficulty, question) {
-            const template = thinkingTemplates[difficulty];
-            const messagesContainer = document.getElementById('chatMessages');
-
-            // Add thinking indicator
-            const thinkingDiv = document.createElement('div');
-            thinkingDiv.className = 'message bot';
-            thinkingDiv.innerHTML = `
-                <div class="thinking-block">
-                    <strong>🧠 Thinking Process (${template.label}):</strong>
-                    ${template.steps.map(step => `<div class="thinking-step">${step}</div>`).join('')}
-                    ${difficulty === 'hard' ? `<button class="google-search-btn" onclick="searchGoogle('${question}')">🔍 Search Google for Latest Info</button>` : ''}
-                </div>
-            `;
-            messagesContainer.appendChild(thinkingDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-            // Add difficulty badge
-            const badgeDiv = document.createElement('div');
-            badgeDiv.className = 'message bot';
-            badgeDiv.innerHTML = `<span class="difficulty-badge ${template.class}">Difficulty: ${template.label}</span>`;
-            messagesContainer.appendChild(badgeDiv);
-
-            // Add response after thinking
-            setTimeout(() => {
-                let response = '';
-                if (difficulty === 'hard') {
-                    response = `🔎 This is a complex question that requires advanced knowledge. I've detected this needs deep research. Using advanced AI analysis:\n\n` +
-                              `• Consulted multiple authoritative sources\n` +
-                              `• Applied expert-level reasoning\n` +
-                              `• Cross-referenced latest information\n` +
-                              `• Provided comprehensive analysis\n\n` +
-                              `Would you like me to search Google for the most recent updates on this topic?`;
-                } else if (difficulty === 'medium') {
-                    response = `Here's my detailed analysis after thorough thinking:\n\n` +
-                              `✓ I've analyzed the question from multiple angles\n` +
-                              `✓ Considered various perspectives and factors\n` +
-                              `✓ Applied relevant knowledge and reasoning\n` +
-                              `✓ Here's what I found...`;
-                } else {
-                    response = `Quick answer: This question is straightforward!\n\n` +
-                              `✓ Direct answer provided\n` +
-                              `✓ Based on clear understanding\n` +
-                              `✓ No additional research needed`;
-                }
-
-                addMessage(response, 'bot');
-            }, 2000);
-        }
-
-        function searchGoogle(question) {
-            const googleURL = `https://www.google.com/search?q=${encodeURIComponent(question)}`;
-            window.open(googleURL, '_blank');
-            
-            // Add confirmation message
-            const messagesContainer = document.getElementById('chatMessages');
-            const confirmDiv = document.createElement('div');
-            confirmDiv.className = 'message bot';
-            confirmDiv.innerHTML = `<div class="message-bubble">🌐 Opening Google Search for: "${question}"<br>📌 Opened in new tab for your research</div>`;
-            messagesContainer.appendChild(confirmDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-
-        function addMessage(text, sender) {
-            const messagesContainer = document.getElementById('chatMessages');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${sender}`;
-            const bubble = document.createElement('div');
-            bubble.className = 'message-bubble';
-            bubble.textContent = text;
-            messageDiv.appendChild(bubble);
-            messagesContainer.appendChild(messageDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-
-        // Image Generation
-        function generateImage() {
-            const prompt = document.getElementById('imagePrompt').value;
-            if (!prompt) {
-                alert('Please enter a prompt');
-                return;
-            }
-
-            const container = document.getElementById('generatedImageContainer');
-            container.innerHTML = '<p style="color: #667eea;">🎨 Generating image...</p>';
-
-            setTimeout(() => {
-                container.innerHTML = `
-                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                        width: 300px; height: 300px; margin: 20px auto; border-radius: 10px; 
-                        display: flex; align-items: center; justify-content: center; color: white; font-size: 3em;">
-                        🖼️
-                    </div>
-                    <p style="text-align: center; color: #666; margin-top: 10px;">✅ Generated: ${prompt}</p>
-                `;
-                stats.images++;
-            }, 2000);
-        }
-
-        // Code Generation
-        function generateCode() {
-            const prompt = document.getElementById('codePrompt').value;
-            const language = document.getElementById('codeLanguage').value;
-
-            if (!prompt) {
-                alert('Please enter code requirements');
-                return;
-            }
-
-            const container = document.getElementById('generatedCodeContainer');
-            container.innerHTML = '<p style="color: #667eea;">💻 Generating code...</p>';
-
-            setTimeout(() => {
-                const sampleCode = `// ${language} code generated for: ${prompt}
-function solution() {
-    // Implementation logic
-    console.log("Task completed successfully");
-    return { status: "success", result: "generated" };
-}`;
-                container.innerHTML = `<div class="code-block">${sampleCode}</div>`;
-                stats.bookings++;
-            }, 1500);
-        }
-
-        // Community Posts
-        function showCreatePostForm() {
-            const content = prompt('What would you like to share?');
-            if (content) {
-                const container = document.getElementById('postsContainer');
-                const postDiv = document.createElement('div');
-                postDiv.className = 'post-card';
-                postDiv.innerHTML = `
-                    <div class="post-header">
-                        <div class="post-author">${currentUser.name}</div>
-                        <div style="color: #999; font-size: 0.9em;">Just now</div>
-                    </div>
-                    <p>${content}</p>
-                    <div class="post-actions">
-                        <button class="post-action-btn">❤️ Like</button>
-                        <button class="post-action-btn">💬 Comment</button>
-                        <button class="post-action-btn">📤 Share</button>
-                    </div>
-                `;
-                container.insertBefore(postDiv, container.firstChild);
-            }
-        }
-
-        // Hotel Booking
-        function searchHotels() {
-            const location = document.getElementById('location').value;
-            if (!location) {
-                alert('Please enter a location');
-                return;
-            }
-
-            const hotels = [
-                { name: 'Luxury Plaza', rating: '⭐⭐⭐⭐⭐', price: '$250/night', amenities: ['WiFi', 'Pool', 'Spa'] },
-                { name: 'Grand Hotel', rating: '⭐⭐⭐⭐', price: '$180/night', amenities: ['WiFi', 'Gym', 'Restaurant'] },
-                { name: 'Budget Inn', rating: '⭐⭐⭐', price: '$80/night', amenities: ['WiFi', 'Parking'] },
-            ];
-
-            const container = document.getElementById('hotelsGrid');
-            container.innerHTML = '';
-
-            hotels.forEach((hotel, index) => {
-                const hotelCard = document.createElement('div');
-                hotelCard.className = 'hotel-card';
-                hotelCard.innerHTML = `
-                    <div class="hotel-image">🏨</div>
-                    <div class="hotel-info">
-                        <div class="hotel-name">${hotel.name}</div>
-                        <div class="hotel-location">${location}</div>
-                        <div class="hotel-rating">${hotel.rating}</div>
-                        <div class="hotel-price">${hotel.price}</div>
-                        <div class="hotel-amenities">
-                            ${hotel.amenities.map(a => `<span class="amenity-tag">${a}</span>`).join('')}
-                        </div>
-                        <div class="hotel-actions">
-                            <button class="book-btn" onclick="openBookingModal('${hotel.name}')">Book Now</button>
-                            <button class="favorite-btn" onclick="toggleFavorite(this)">♥️ Save</button>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(hotelCard);
-            });
-        }
-
-        function openBookingModal(hotelName) {
-            document.getElementById('bookingModal').classList.add('active');
-        }
-
-        function closeBookingModal() {
-            document.getElementById('bookingModal').classList.remove('active');
-        }
-
-        function completeBooking(event) {
-            event.preventDefault();
-            alert('✅ Booking completed! 🎉');
-            closeBookingModal();
-            stats.bookings++;
-            updateProfile();
-        }
-
-        function toggleFavorite(btn) {
-            btn.classList.toggle('favorited');
-        }
-
-        // Settings
         function toggleSetting(element) {
             element.classList.toggle('active');
         }
 
-        // Profile
+        // ============================================================
+        // PROFILE UPDATE
+        // ============================================================
         function updateProfile() {
             if (currentUser) {
                 document.getElementById('profileName').textContent = currentUser.name;
                 document.getElementById('profileEmail').textContent = currentUser.email;
                 document.getElementById('chatCount').textContent = stats.chats;
-                document.getElementById('imageCount').textContent = stats.images;
-                document.getElementById('bookingCount').textContent = stats.bookings;
+                document.getElementById('totalQuestions').textContent = stats.totalQuestions;
+                
+                // Count active APIs
+                let activeCount = 0;
+                if (apiKeys.google) activeCount++;
+                if (apiKeys.openai) activeCount++;
+                if (apiKeys.huggingface) activeCount++;
+                document.getElementById('activeAPIs').textContent = activeCount;
+
+                // Update API status
+                const statusEl = document.getElementById('apiStatus');
+                if (apiKeys[currentModel]) {
+                    statusEl.textContent = '✓ Connected';
+                    statusEl.className = 'api-status connected';
+                } else {
+                    statusEl.textContent = '⚠ Not Configured';
+                    statusEl.className = 'api-status disconnected';
+                }
             }
         }
 
-        // Initialize
+        // ============================================================
+        // INITIALIZE
+        // ============================================================
         window.addEventListener('load', () => {
             const savedUser = localStorage.getItem('user');
             if (savedUser) {
@@ -1650,6 +1274,7 @@ function solution() {
                 document.getElementById('authScreen').style.display = 'none';
                 document.getElementById('appScreen').style.display = 'block';
                 updateProfile();
+                addMessage('👋 Welcome! Your AI Chat is ready. Configure your API keys in the API Settings.', 'system');
             } else {
                 document.getElementById('authScreen').style.display = 'flex';
             }
